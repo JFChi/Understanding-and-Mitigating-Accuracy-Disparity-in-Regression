@@ -1,0 +1,7 @@
+__pycache__/
+ figures/
+ *_logs/
+ *.csv
+ *.log
+
+ *.py[cod]

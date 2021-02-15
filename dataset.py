@@ -179,6 +179,50 @@ class LawSchoolDataset(Dataset):
         A_1_mean_y = np.mean(self.Y[np.argwhere(A_label == 1).squeeze()])
         return A_0_mean_y, A_1_mean_y
 
+class InsuranceDataset(Dataset):
+    """
+    The medical cost prediction dataset.
+    """
+
+    def __init__(self, root_dir, phase):
+        self.npz_file = os.path.join(root_dir, 'insurance.npz')
+        self.data = np.load(self.npz_file)
+        if phase == "train":
+            self.X = self.data["x_train"]
+            self.Y = self.data["y_train"]
+            self.A = self.data["attr_train"]
+        elif phase == "test":
+            self.X = self.data["x_test"]
+            self.Y = self.data["y_test"]
+            self.A = self.data["attr_test"]
+        else:
+            raise NotImplementedError
+
+        self.Y = np.expand_dims(self.Y, axis=-1)
+
+        self.xdim = self.X.shape[1]
+        self.ydim = self.Y.shape[1]
+        self.adim = 2
+
+
+    def __len__(self):
+        return len(self.X)
+
+    def __getitem__(self, idx):
+        return torch.from_numpy(self.X[idx]).float(), \
+                torch.from_numpy(self.Y[idx]).float(), \
+                self.A[idx]
+
+    def get_YA_distribution(self):
+        '''get the the mean Y when in different sensitive groups
+        '''
+        A_num_class = self.adim
+        assert A_num_class==2
+        A_label= self.A
+        A_0_mean_y = np.mean(self.Y[np.argwhere(A_label == 0).squeeze()])
+        A_1_mean_y = np.mean(self.Y[np.argwhere(A_label == 1).squeeze()])
+        return A_0_mean_y, A_1_mean_y
+
 if __name__ == '__main__':
     logger = get_logger("dataset")
     ######## test pytorch adult dataset ######### 

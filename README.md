@@ -41,7 +41,7 @@ pip install -r requirements.txt
 To get the preprocess datasets, please run the following python scripts:
 
 ```
-python prep_adult.py && python prep_crime.py && python prep_law.py
+python prep_adult.py && python prep_crime.py && python prep_law.py && python prep_insurance.py
 ```
 
 However, there is no need to do this step in our repo, since we already provide the preprocessed datasets in the data folder.

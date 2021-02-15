@@ -8,6 +8,7 @@ import torch
 import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import DataLoader
+from sklearn.metrics import accuracy_score
 
 from dataset import AdultDataset
 from models import MLPNet, WassersteinNet, CENet
@@ -123,23 +124,33 @@ if args.model == "mlp":
 	r_squared = 1 - cls_error/ys_var
 	logger.info("R squared = {}".format(r_squared))
 	nmse = cls_error/ys_var
+	# acc for classification
+	acc_val = accuracy_score(y_true=ys_numpy.astype(int), y_pred=(ypreds_numpy>0.5).astype(int))
+	logger.info("Acc. of classification = {}".format(acc_val))
 	# save data to csv
 	csv_data = {"cls_error": cls_error,
 				"error_0": error_0,
 				"error_1": error_1,
 				"err_gap": np.abs(error_0-error_1),
 				"R^2": r_squared,
-				"nmse": nmse
+				"nmse": nmse,
+				"cla_acc": acc_val,
 				}
 	csv_fn = args.name + ".csv"
 	with open(csv_fn, "a") as csv_file:
-		fieldnames = ["cls_error", "error_0", "error_1", "err_gap", "R^2", "nmse"]
+		fieldnames = ["cls_error", "error_0", "error_1", "err_gap", "R^2", "nmse", "cla_acc"]
 		writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 		if os.path.exists(csv_fn):
 			pass # no need to write headers
 		else:
 			writer.writeheader()
 		writer.writerow(csv_data)
+	# save prediction to npy file
+	npy_fn = args.name + "_seed_%d"% args.seed + ".npz"
+	np.savez(npy_fn, 
+			 y_pred=ypreds_numpy, 
+			 y_true=ys_numpy, 
+			 A_true=attrs_numpy)
 	
 elif args.model == "wmlp":
 	# train wass MLP
@@ -206,23 +217,33 @@ elif args.model == "wmlp":
 	r_squared = 1 - cls_error/ys_var
 	logger.info("R squared = {}".format(r_squared))
 	nmse = cls_error/ys_var
+	# acc for classification
+	acc_val = accuracy_score(y_true=ys_numpy.astype(int), y_pred=(ypreds_numpy>0.5).astype(int))
+	logger.info("Acc. of classification = {}".format(acc_val))
 	# save data to csv
 	csv_data = {"cls_error": cls_error,
 				"error_0": error_0,
 				"error_1": error_1,
 				"err_gap": np.abs(error_0-error_1),
 				"R^2": r_squared,
-				"nmse": nmse
+				"nmse": nmse,
+				"cla_acc": acc_val,
 				}
 	csv_fn = args.name + ".csv"
 	with open(csv_fn, "a") as csv_file:
-		fieldnames = ["cls_error", "error_0", "error_1", "err_gap", "R^2", "nmse"]
+		fieldnames = ["cls_error", "error_0", "error_1", "err_gap", "R^2", "nmse", "cla_acc"]
 		writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 		if os.path.exists(csv_fn):
 			pass # no need to write headers
 		else:
 			writer.writeheader()
 		writer.writerow(csv_data)
+	# save prediction to npy file
+	npy_fn = args.name + "_seed_%d"% args.seed + ".npz"
+	np.savez(npy_fn, 
+			 y_pred=ypreds_numpy, 
+			 y_true=ys_numpy, 
+			 A_true=attrs_numpy)
 	
 elif args.model == "CENet":
 	logger.info("Experiment with CENet: {} ".format(args.model))
@@ -280,23 +301,33 @@ elif args.model == "CENet":
 	r_squared = 1 - cls_error/ys_var
 	logger.info("R squared = {}".format(r_squared))
 	nmse = cls_error/ys_var
+	# acc for classification
+	acc_val = accuracy_score(y_true=ys_numpy.astype(int), y_pred=(ypreds_numpy>0.5).astype(int))
+	logger.info("Acc. of classification = {}".format(acc_val))
 	# save data to csv
 	csv_data = {"cls_error": cls_error,
 				"error_0": error_0,
 				"error_1": error_1,
 				"err_gap": np.abs(error_0-error_1),
 				"R^2": r_squared,
-				"nmse": nmse
+				"nmse": nmse,
+				"cla_acc": acc_val,
 				}
 	csv_fn = args.name + ".csv"
 	with open(csv_fn, "a") as csv_file:
-		fieldnames = ["cls_error", "error_0", "error_1", "err_gap", "R^2", "nmse"]
+		fieldnames = ["cls_error", "error_0", "error_1", "err_gap", "R^2", "nmse", "cla_acc"]
 		writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 		if os.path.exists(csv_fn):
 			pass # no need to write headers
 		else:
 			writer.writeheader()
 		writer.writerow(csv_data)
+	# save prediction to npy file
+	npy_fn = args.name + "_seed_%d"% args.seed + ".npz"
+	np.savez(npy_fn, 
+			 y_pred=ypreds_numpy, 
+			 y_true=ys_numpy, 
+			 A_true=attrs_numpy)
 	
 else:
 	raise NotImplementedError

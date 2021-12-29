@@ -69,7 +69,15 @@ The usages for other datasets are the same.
 
 ## Reference
 
-If you use this code for your research and find it helpful, please cite our paper [Understanding and Mitigating Accuracy Disparity in Regression](https://openreview.net/pdf?id=N9oPAFcuYWX).
+If you use this code for your research and find it helpful, please cite our paper
+```
+@inproceedings{chi2021understanding,
+  title={Understanding and Mitigating Accuracy Disparity in Regression},
+  author={Chi, Jianfeng and Tian, Yuan and Gordon, Geoffrey J and Zhao, Han},
+  booktitle={International conference on machine learning},
+  year={2021}
+}
+```
 
 ## Contact
 
